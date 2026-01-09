@@ -13,24 +13,16 @@
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen p-4 md:p-6">
     
-    <!-- FORCE DEBUG - ALWAYS SHOW -->
-    <div style="position: fixed; top: 10px; right: 10px; background: #ff0000; color: white; padding: 15px; border-radius: 5px; z-index: 9999; font-weight: bold; border: 3px solid yellow;">
-        🔍 DEBUG MODE<br>
-        Student: <?= isset($student) ? 'SET' : 'NOT SET' ?><br>
-        Grades: <?= isset($grades) ? count($grades) : '0' ?><br>
-        POST: <?= !empty($_POST) ? 'YES' : 'NO' ?>
-    </div>
-    
     <div class="max-w-7xl mx-auto">
         
         <!-- Header -->
         <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="mb-6 md:mb-0 md:mr-8">
-                    <div class="w-24 h-24 md:w-28 md:h-28 bg-white rounded-full flex items-center justify-center shadow-lg">
-                        <div class="w-20 h-20 md:w-24 md:h-24 bg-blue-900 rounded-full flex items-center justify-center">
-                            <i class="fas fa-graduation-cap text-white text-3xl md:text-4xl"></i>
-                        </div>
+                    <div class="w-24 h-24 md:w-28 md:h-28 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                        <img src="<?= base_url('uploads/hcc logo.png') ?>" 
+                             alt="HCC Logo" 
+                             class="w-full h-full object-cover">
                     </div>
                 </div>
                 <div class="text-center md:text-left">
@@ -54,7 +46,7 @@
                         </div>
                         <input type="text" 
                                name="student_number" 
-                               value="<?= htmlspecialchars($student_number ?? '22-0013484') ?>" 
+                               value="<?= htmlspecialchars($student_number ?? '') ?>" 
                                class="w-full pl-12 pr-4 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                placeholder="Enter student number (e.g., 22-0013484)"
                                required>
@@ -88,19 +80,6 @@
             </form>
         </div>
         
-        <!-- Check if form was submitted -->
-        <?php if (!empty($_POST)): ?>
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 rounded-xl shadow-md mb-8">
-                <div class="flex items-center">
-                    <i class="fas fa-info-circle text-2xl mr-3"></i>
-                    <div>
-                        <h3 class="font-bold text-lg">Form Submitted</h3>
-                        <p class="mt-1">Searching for: <?= htmlspecialchars($_POST['student_number'] ?? '') ?> - <?= htmlspecialchars($_POST['semester_btn'] ?? '') ?></p>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-        
         <!-- Error Message -->
         <?php if (isset($error)): ?>
             <div class="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-xl shadow-md mb-8">
@@ -114,7 +93,7 @@
             </div>
         <?php endif; ?>
         
-        <!-- Grades Display - SIMPLIFIED CHECK -->
+        <!-- Grades Display -->
         <?php if (isset($student) && is_array($student)): ?>
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
                 <!-- Student Info Header -->
@@ -123,8 +102,9 @@
                         <div class="mb-4 md:mb-0">
                             <h2 class="text-2xl md:text-3xl font-bold mb-2"><?= htmlspecialchars($student['FullName']) ?></h2>
                             <div class="flex flex-wrap gap-3">
-                                <span class="bg-blue-600 bg-opacity-80 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                                    <i class="fas fa-book mr-1"></i> <?= htmlspecialchars($student['Course']) ?>
+                               <span class="bg-blue-600 bg-opacity-80 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                                    <i class="fas fa-book mr-1"></i> 
+                                    <?= isset($course_name) ? htmlspecialchars($course_name) : 'Course #' . htmlspecialchars($student['Course']) ?>
                                 </span>
                                 <span class="bg-purple-600 bg-opacity-80 text-white px-4 py-2 rounded-lg text-sm font-semibold">
                                     <i class="fas fa-user-graduate mr-1"></i> <?= htmlspecialchars($student['Level']) ?>
@@ -167,7 +147,19 @@
                                         <div class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($grade['subjectDesc'] ?? '') ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                                        <?= htmlspecialchars($grade['Teacher'] == '0' || empty($grade['Teacher']) ? 'TBA' : 'Teacher ' . $grade['Teacher']) ?>
+                                        <?php
+                                        $teacher = '';
+                                        if (isset($grade['teacher_name']) && !empty($grade['teacher_name'])) {
+                                            $teacher = htmlspecialchars($grade['teacher_name']);
+                                        } elseif (isset($grade['Teacher']) && !empty($grade['Teacher'])) {
+                                            $teacher = 'Instructor ' . htmlspecialchars($grade['Teacher']);
+                                        } elseif (isset($grade['teacher_id']) && !empty($grade['teacher_id'])) {
+                                            $teacher = 'Prof. ' . htmlspecialchars($grade['teacher_id']);
+                                        } else {
+                                            $teacher = 'TBA';
+                                        }
+                                        echo $teacher;
+                                        ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-lg font-medium <?= ($grade['Prelim'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
                                         <?= htmlspecialchars($grade['Prelim'] ?? '-') ?>
