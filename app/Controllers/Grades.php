@@ -13,10 +13,12 @@ class Grades extends BaseController
         $request = service('request');
 
         if ($request->getMethod() === 'post') {
-            $inputID = $request->getPost('student_number');
+            // FIX: Trim whitespace from the input immediately
+            $inputID = trim($request->getPost('student_number'));
+            
             $semesterBtn = $request->getPost('semester_btn'); 
             
-            // Map button text to Database value (Assuming '1ST SEM' based on previous data)
+            // Map button text to Database value
             $semKey = ($semesterBtn === '1st Semester') ? '1ST SEM' : '2ND SEM';
 
             $model = new GradesModel();
@@ -28,10 +30,10 @@ class Grades extends BaseController
                 $data['student_name'] = $studentInfo['FullName'];
                 $data['student_course'] = $studentInfo['Course'] . ' - ' . $studentInfo['Level'];
                 
-                // 2. Use 'admissionID' to get grades
+                // 2. Use the TRIMMED $inputID to get grades
                 $results = $model->getStudentGrades($inputID, $semKey);
                 
-                // Clean up Teacher Name (Use the joined name if found, otherwise use the raw ID/Name)
+                // Clean up Teacher Name
                 foreach ($results as &$row) {
                     if (empty($row['teacher_name'])) {
                         $row['teacher_name'] = $row['teacher_raw']; 
