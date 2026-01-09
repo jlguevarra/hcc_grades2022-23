@@ -18,67 +18,76 @@ class Grades extends BaseController
             // Map button to database value
             $semester = ($semesterBtn === '1st Semester') ? '1ST SEM' : '2ND SEM';
             
-            // Direct database connection - SIMPLE AND GUARANTEED
+            // Direct database connection
             $db = \Config\Database::connect();
             
-            // 1. Get student info - SIMPLE QUERY
+            // 1. Get student info WITH COURSE NAME from courses table
             $studentQuery = $db->query("
-                SELECT StudentNo, FullName, Course, Level 
-                FROM students_college 
-                WHERE StudentNo = '" . $db->escapeString($studentNo) . "'
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT('Course #', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = '" . $db->escapeString($studentNo) . "'
             ");
             
             $student = $studentQuery->getRowArray();
             
             if ($student) {
-                // Map course number to course name
-                $courseNames = [
-                    '1' => 'Bachelor of Arts in English',
-                    '2' => 'Bachelor of Science in Information Technology',
-                    '3' => 'Bachelor of Science in Computer Science',
-                    '4' => 'Bachelor of Science in Business Administration',
-                    '5' => 'Bachelor of Science in Accountancy',
-                    '6' => 'Bachelor of Science in Nursing',
-                    '7' => 'Bachelor of Elementary Education',
-                    '8' => 'Bachelor of Secondary Education',
-                    '9' => 'Bachelor of Science in Hospitality Management',
-                    '10' => 'Bachelor of Science in Tourism Management',
-                    '11' => 'Bachelor of Science in Criminology',
-                    '12' => 'Bachelor of Science in Psychology',
-                    '13' => 'Bachelor of Science in Biology',
-                    '14' => 'Bachelor of Science in Mathematics',
-                    '15' => 'Bachelor of Science in Engineering',
-                ];
-                
-                $courseNumber = $student['Course'] ?? '';
-                $courseName = isset($courseNames[$courseNumber]) ? $courseNames[$courseNumber] : 'Course #' . $courseNumber;
-                
                 $data['student'] = $student;
                 $data['student_number'] = $studentNo;
                 $data['selected_sem'] = $semesterBtn;
                 $data['school_year'] = '2022-2023';
-                $data['course_name'] = $courseName;
-                $data['course_number'] = $courseNumber;
+                $data['course_name'] = $student['course_name'] ?? 'Course #' . ($student['course_id'] ?? '');
+                $data['course_number'] = $student['course_code'] ?? $student['course_id'] ?? '';
                 
-                // 2. Get grades - SIMPLE QUERY THAT WE KNOW WORKS
-                $gradesQuery = $db->query("
-                    SELECT 
-                        s.subjectCode,
-                        s.subjectDesc,
-                        g.Teacher,
-                        g.Prelim,
-                        g.Midterm,
-                        g.Finals,
-                        g.Grade,
-                        g.Equivalent,
-                        g.Remarks
-                    FROM student_subject_college g
-                    LEFT JOIN subject_college s ON s.subjectID = g.subjectID
-                    WHERE g.studentnumber = '" . $db->escapeString($studentNo) . "'
-                    AND g.sy = '2022-2023'
-                    AND g.semester = '" . $db->escapeString($semester) . "'
-                    ORDER BY s.subjectCode ASC
-                ");
+                // 2. Get grades with teacher name
+                try {
+                    $gradesQuery = $db->query("
+                        SELECT 
+                            s.subjectCode,
+                            s.subjectDesc,
+                            g.Teacher as teacher_id,
+                            COALESCE(u.fullname, CONCAT('Prof. ', g.Teacher)) as teacher_name,
+                            g.Prelim,
+                            g.Midterm,
+                            g.Finals,
+                            g.Grade,
+                            g.Equivalent,
+                            g.Remarks
+                        FROM student_subject_college g
+                        LEFT JOIN subject_college s ON s.subjectID = g.subjectID
+                        LEFT JOIN users u ON u.userID = g.Teacher
+                        WHERE g.studentnumber = '" . $db->escapeString($studentNo) . "'
+                        AND g.sy = '2022-2023'
+                        AND g.semester = '" . $db->escapeString($semester) . "'
+                        ORDER BY s.subjectCode ASC
+                    ");
+                } catch (\Exception $e) {
+                    $gradesQuery = $db->query("
+                        SELECT 
+                            s.subjectCode,
+                            s.subjectDesc,
+                            g.Teacher as teacher_id,
+                            CONCAT('Instructor ', g.Teacher) as teacher_name,
+                            g.Prelim,
+                            g.Midterm,
+                            g.Finals,
+                            g.Grade,
+                            g.Equivalent,
+                            g.Remarks
+                        FROM student_subject_college g
+                        LEFT JOIN subject_college s ON s.subjectID = g.subjectID
+                        WHERE g.studentnumber = '" . $db->escapeString($studentNo) . "'
+                        AND g.sy = '2022-2023'
+                        AND g.semester = '" . $db->escapeString($semester) . "'
+                        ORDER BY s.subjectCode ASC
+                    ");
+                }
                 
                 $grades = $gradesQuery->getResultArray();
                 $data['grades'] = $grades;
