@@ -9,7 +9,7 @@ class GradesModel extends Model
     protected $table = 'student_subject_college';
 
     /**
-     * 1. Find Student Info (Name, Course)
+     * 1. Find Student Info (Name, Course) from students_college table
      */
     public function getStudentInfo($studentNo)
     {
@@ -22,16 +22,16 @@ class GradesModel extends Model
     }
 
     /**
-     * 2. Get Grades using Student Number directly
+     * 2. Get Grades joined with Subject and Teacher info
      */
     public function getStudentGrades($studentNumber, $semester)
     {
         $builder = $this->db->table('student_subject_college as grades');
         
-        // Join Subject info
+        // JOIN: Match subjectID to get subjectCode and subjectDesc
         $builder->join('subject_college as subjects', 'subjects.subjectID = grades.subjectID', 'left');
         
-        // Join Teacher info
+        // JOIN: Match Teacher ID to users table to get the Full Name
         $builder->join('users as teacher_user', 'teacher_user.userID = grades.Teacher', 'left');
 
         $builder->select('
@@ -47,10 +47,10 @@ class GradesModel extends Model
             grades.Remarks as remarks
         ');
 
-        // DIRECT MATCH: Uses the studentnumber column in the grades table
+        // Filter by the provided student number
         $builder->where('grades.studentnumber', $studentNumber);
         
-        // Ensure SY and Sem match exactly
+        // Hardcoded for SY 2022-2023 as requested
         $builder->where('grades.sy', '2022-2023');
         $builder->where('grades.semester', $semester); 
 

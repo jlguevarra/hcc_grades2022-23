@@ -13,30 +13,27 @@ class Grades extends BaseController
         $request = service('request');
 
         if ($request->getMethod() === 'post') {
-            // FIX: Trim whitespace from the input immediately
+            // Trim whitespace to prevent lookup failures
             $inputID = trim($request->getPost('student_number'));
-            
             $semesterBtn = $request->getPost('semester_btn'); 
             
-            // Map button text to Database value
+            // Map button value to the exact string stored in the 'semester' column
             $semKey = ($semesterBtn === '1st Semester') ? '1ST SEM' : '2ND SEM';
 
             $model = new GradesModel();
-
-            // 1. Find the student in 'students_college'
             $studentInfo = $model->getStudentInfo($inputID);
 
             if ($studentInfo) {
                 $data['student_name'] = $studentInfo['FullName'];
                 $data['student_course'] = $studentInfo['Course'] . ' - ' . $studentInfo['Level'];
                 
-                // 2. Use the TRIMMED $inputID to get grades
+                // Fetch grades using trimmed ID and mapped Semester key
                 $results = $model->getStudentGrades($inputID, $semKey);
                 
-                // Clean up Teacher Name
+                // Logic to handle cases where teacher is not in the users table
                 foreach ($results as &$row) {
                     if (empty($row['teacher_name'])) {
-                        $row['teacher_name'] = $row['teacher_raw']; 
+                        $row['teacher_name'] = ($row['teacher_raw'] == '0') ? 'TBA' : $row['teacher_raw']; 
                     }
                 }
                 $data['results'] = $results;
