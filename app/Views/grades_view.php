@@ -255,11 +255,26 @@
         
         <!-- Footer -->
         <div class="text-center text-gray-500 text-sm mt-12 pb-4">
-            <p>Holy Cross College Student Portal • School Year 2022-2023 • Official Grade Viewing System</p>
-            <p class="mt-2 text-xs">
-                <i class="fas fa-info-circle mr-1"></i>
-                For discrepancies in grades, please contact the Registrar's Office.
-            </p>
+            <p class="mb-2">Holy Cross College Student Portal • School Year 2022-2023 • Official Grade Viewing System</p>
+            
+            <!-- Credit Section -->
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <p class="text-xs text-gray-400">
+                    <i class="fas fa-code mr-1"></i>
+                    System Developed by: <span class="font-medium text-gray-500">John Lloyd D. Guevarra</span>
+                </p>
+                <p class="text-xs text-gray-400 mt-1">
+                    <i class="fas fa-graduation-cap mr-1"></i>
+                    BSIT 4A • OJT • TRS
+                </p>
+            </div>
+            
+            <div class="mt-4">
+                <p class="text-xs text-gray-400">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    For discrepancies in grades, please contact the Registrar's Office.
+                </p>
+            </div>
         </div>
         
     </div>
