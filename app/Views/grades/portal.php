@@ -48,17 +48,18 @@
         </div>
     <?php endif; ?>
 
-    <?php if (isset($results)): ?>
+    <?php if (isset($student_name)): ?>
     <div class="w-full max-w-5xl bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 mt-6">
         
         <div class="bg-gray-800 text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
                 <h2 class="text-2xl font-bold uppercase"><?= esc($student_name ?? 'Student Record') ?></h2>
                 <p class="text-gray-400 text-sm mt-1"><?= esc($student_course ?? '') ?></p>
+                <p class="text-gray-400 text-xs mt-1">Student No: <?= esc($student_number ?? '') ?></p>
             </div>
             <div class="mt-4 md:mt-0">
                 <span class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-bold shadow-sm border border-blue-500">
-                    <?= esc($selected_sem) ?>
+                    <?= esc($selected_sem ?? '') ?>
                 </span>
             </div>
         </div>
@@ -82,22 +83,22 @@
                         <?php foreach ($results as $row): ?>
                         <tr class="hover:bg-blue-50 transition-colors duration-150">
                             <td class="px-6 py-4">
-                                <div class="font-bold text-gray-800 text-base"><?= esc($row['subject_code']) ?></div>
-                                <div class="text-xs text-gray-500 mt-0.5"><?= esc($row['subject_description']) ?></div>
+                                <div class="font-bold text-gray-800 text-base"><?= esc($row['subject_code'] ?? 'N/A') ?></div>
+                                <div class="text-xs text-gray-500 mt-0.5"><?= esc($row['subject_description'] ?? '') ?></div>
                             </td>
                             <td class="px-6 py-4 text-gray-600 font-medium">
-                                <?= esc($row['teacher_name'] == '0' ? 'TBA' : $row['teacher_name']) ?>
+                                <?= esc(empty($row['teacher_name']) ? ($row['teacher_raw'] == '0' ? 'TBA' : $row['teacher_raw']) : $row['teacher_name']) ?>
                             </td>
-                            <td class="px-3 py-4 text-center text-gray-600"><?= esc($row['prelim']) ?></td>
-                            <td class="px-3 py-4 text-center text-gray-600"><?= esc($row['midterm']) ?></td>
-                            <td class="px-3 py-4 text-center text-gray-600"><?= esc($row['finals']) ?></td>
+                            <td class="px-3 py-4 text-center text-gray-600"><?= esc($row['prelim'] ?? '') ?></td>
+                            <td class="px-3 py-4 text-center text-gray-600"><?= esc($row['midterm'] ?? '') ?></td>
+                            <td class="px-3 py-4 text-center text-gray-600"><?= esc($row['finals'] ?? '') ?></td>
                             <td class="px-3 py-4 text-center font-extrabold text-blue-700 text-base bg-blue-50/50">
-                                <?= esc($row['semestral']) ?>
+                                <?= esc($row['semestral'] ?? '') ?>
                             </td>
-                            <td class="px-3 py-4 text-center font-bold text-gray-700"><?= esc($row['equivalent']) ?></td>
+                            <td class="px-3 py-4 text-center font-bold text-gray-700"><?= esc($row['equivalent'] ?? '') ?></td>
                             <td class="px-6 py-4 text-center">
                                 <?php 
-                                    $rem = strtoupper($row['remarks']);
+                                    $rem = isset($row['remarks']) ? strtoupper($row['remarks']) : '';
                                     $badgeClass = match($rem) {
                                         'PASSED' => 'bg-green-100 text-green-700 border-green-200',
                                         'FAILED' => 'bg-red-100 text-red-700 border-red-200',
@@ -122,8 +123,15 @@
                 <h3 class="text-lg font-bold text-gray-700">No Grades Found</h3>
                 <p class="text-gray-500 text-sm">
                     We found your name, but there are no grades recorded for 
-                    <span class="font-bold text-gray-700"><?= esc($selected_sem) ?></span> of 
+                    <span class="font-bold text-gray-700"><?= esc($selected_sem ?? 'Selected Semester') ?></span> of 
                     <span class="font-bold text-gray-700">2022-2023</span>.
+                </p>
+                <p class="text-gray-400 text-xs mt-2">
+                    Student Number: <?= esc($student_number ?? '') ?><br>
+                    Semester Filter: <?= esc($selected_sem ?? '') ?> (Mapped to: <?= 
+                        ($selected_sem ?? '') === '1st Semester' ? '1ST SEM' : 
+                        (($selected_sem ?? '') === '2nd Semester' ? '2ND SEM' : 'Unknown') 
+                    ?>)
                 </p>
             </div>
         <?php endif; ?>

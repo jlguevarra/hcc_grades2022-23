@@ -7,6 +7,9 @@ use CodeIgniter\Model;
 class GradesModel extends Model
 {
     protected $table = 'student_subject_college';
+    protected $primaryKey = 'studentsubjectID';
+    protected $allowedFields = [];
+    protected $returnType = 'array';
 
     /**
      * 1. Find Student Info (Name, Course) from students_college table
@@ -32,6 +35,7 @@ class GradesModel extends Model
         $builder->join('subject_college as subjects', 'subjects.subjectID = grades.subjectID', 'left');
         
         // JOIN: Match Teacher ID to users table to get the Full Name
+        // Note: Make sure you have a 'users' table with 'userID' and 'fullname' columns
         $builder->join('users as teacher_user', 'teacher_user.userID = grades.Teacher', 'left');
 
         $builder->select('
@@ -52,8 +56,16 @@ class GradesModel extends Model
         
         // Hardcoded for SY 2022-2023 as requested
         $builder->where('grades.sy', '2022-2023');
-        $builder->where('grades.semester', $semester); 
+        $builder->where('grades.semester', $semester);
+        
+        // Order by subject code for better presentation
+        $builder->orderBy('subjects.subjectCode', 'ASC');
 
-        return $builder->get()->getResultArray();
+        $query = $builder->get();
+        
+        // For debugging: Uncomment to see the generated SQL
+        // log_message('info', 'SQL Query: ' . $this->db->getLastQuery());
+        
+        return $query->getResultArray();
     }
 }
