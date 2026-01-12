@@ -1,0 +1,13 @@
+CRITICAL - 2026-01-12 03:21:21 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "grades_view.php"
+[Method: POST, Route: /]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('grades_view.php')
+ 2 SYSTEMPATH\Common.php(1199): CodeIgniter\View\View->render('grades_view', [], true)
+ 3 APPPATH\Controllers\Grades.php(111): view('grades_view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Grades->index()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Grades))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\hcc_grades2022-23\\public\\index.php')

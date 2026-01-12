@@ -10,3 +10,4 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Grades::index');
 $routes->post('/', 'Grades::index');
 $routes->match(['get', 'post'], 'grades', 'Grades::index');
+$routes->post('grades/findStudentByName', 'Grades::findStudentByName');

@@ -110,4 +110,104 @@ class Grades extends BaseController
         
         return view('grades_view', $data);
     }
+    
+    // ADD THIS NEW METHOD FOR FINDING STUDENT BY NAME
+    public function findStudentByName()
+    {
+        // Only allow AJAX requests
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(405)->setJSON(['error' => 'Method not allowed']);
+        }
+        
+        $lastName = trim($this->request->getPost('last_name') ?? '');
+        $firstName = trim($this->request->getPost('first_name') ?? '');
+        
+        if (empty($lastName) || empty($firstName)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Please enter both last name and first name.'
+            ]);
+        }
+        
+        $db = \Config\Database::connect();
+        
+        // Search for students by name (adjust based on your database structure)
+        // This assumes FullName is in "LASTNAME, FIRSTNAME" format
+        // If names are stored separately, adjust the query accordingly
+        
+        try {
+            // Option 1: If names are stored separately in the database
+            // Assuming you have LastName and FirstName columns:
+            $query = $db->query("
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName,
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT('Course #', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE 
+                    (sc.LastName LIKE '%" . $db->escapeLikeString($lastName) . "%' 
+                     OR sc.FullName LIKE '%" . $db->escapeLikeString($lastName) . "%')
+                    AND (sc.FirstName LIKE '%" . $db->escapeLikeString($firstName) . "%' 
+                         OR sc.FullName LIKE '%" . $db->escapeLikeString($firstName) . "%')
+                ORDER BY sc.FullName ASC
+                LIMIT 20
+            ");
+            
+            // Option 2: If only FullName is available (commented out)
+            /*
+            $query = $db->query("
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName,
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT('Course #', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE 
+                    sc.FullName LIKE '%" . $db->escapeLikeString($lastName) . "%'
+                    AND sc.FullName LIKE '%" . $db->escapeLikeString($firstName) . "%'
+                ORDER BY sc.FullName ASC
+                LIMIT 20
+            ");
+            */
+            
+            $students = $query->getResultArray();
+            
+            if (empty($students)) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'No students found with that name.'
+                ]);
+            }
+            
+            // Format the response
+            $formattedStudents = array_map(function($student) {
+                return [
+                    'student_id' => $student['StudentNo'],
+                    'full_name' => $student['FullName'],
+                    'course' => $student['course_code'] ?? $student['course_id'] ?? '',
+                    'course_name' => $student['course_name'] ?? '',
+                    'level' => $student['Level']
+                ];
+            }, $students);
+            
+            return $this->response->setJSON([
+                'success' => true,
+                'students' => $formattedStudents
+            ]);
+            
+        } catch (\Exception $e) {
+            log_message('error', 'Error finding student by name: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'An error occurred while searching. Please try again.'
+            ]);
+        }
+    }
 }
