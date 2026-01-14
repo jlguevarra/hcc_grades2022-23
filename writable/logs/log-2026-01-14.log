@@ -1,0 +1,138 @@
+ERROR - 2026-01-14 10:11:01 --> mysqli_sql_exception: MySQL server has gone away in C:\xampp\htdocs\hcc_grades2022-23\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\hcc_grades2022-23\system\Database\MySQLi\Connection.php(327): mysqli->query('\r\n             ...', 0)
+#1 C:\xampp\htdocs\hcc_grades2022-23\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('\r\n             ...')
+#2 C:\xampp\htdocs\hcc_grades2022-23\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('\r\n             ...')
+#3 C:\xampp\htdocs\hcc_grades2022-23\app\Controllers\Grades.php(25): CodeIgniter\Database\BaseConnection->query('\r\n             ...')
+#4 C:\xampp\htdocs\hcc_grades2022-23\system\CodeIgniter.php(933): App\Controllers\Grades->index()
+#5 C:\xampp\htdocs\hcc_grades2022-23\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Grades))
+#6 C:\xampp\htdocs\hcc_grades2022-23\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\xampp\htdocs\hcc_grades2022-23\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 C:\xampp\htdocs\hcc_grades2022-23\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 C:\xampp\htdocs\hcc_grades2022-23\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 C:\xampp\htdocs\hcc_grades2022-23\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#11 {main}
+CRITICAL - 2026-01-14 10:11:02 --> CodeIgniter\Database\Exceptions\DatabaseException: MySQL server has gone away
+[Method: POST, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 APPPATH\Controllers\Grades.php(25): CodeIgniter\Database\BaseConnection->query('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Grades->index()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Grades))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\hcc_grades2022-23\\public\\index.php')
+CRITICAL - 2026-01-14 10:11:02 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: MySQL server has gone away
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 3 APPPATH\Controllers\Grades.php(25): CodeIgniter\Database\BaseConnection->query('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Grades->index()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Grades))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\hcc_grades2022-23\\public\\index.php')
+CRITICAL - 2026-01-14 10:11:02 --> [Caused by] mysqli_sql_exception: MySQL server has gone away
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 4 APPPATH\Controllers\Grades.php(25): CodeIgniter\Database\BaseConnection->query('
+                SELECT 
+                    sc.StudentNo, 
+                    sc.FullName, 
+                    sc.Course as course_id,
+                    sc.Level,
+                    COALESCE(c.CourseDesc, CONCAT(\'Course #\', sc.Course)) as course_name,
+                    COALESCE(c.CourseCode, sc.Course) as course_code
+                FROM students_college sc
+                LEFT JOIN courses c ON c.CourseID = sc.Course
+                WHERE sc.StudentNo = \'22-0000638\'
+            ')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Grades->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Grades))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\hcc_grades2022-23\\public\\index.php')

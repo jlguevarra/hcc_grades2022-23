@@ -53,6 +53,221 @@
                 opacity: 1;
             }
         }
+        
+        /* Responsive table styles */
+        .grade-table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Desktop: Full table without horizontal scroll */
+        @media (min-width: 1024px) {
+            .grade-table-container {
+                overflow-x: visible;
+            }
+            .grade-table {
+                width: 100%;
+                min-width: auto;
+            }
+            .grade-table th, 
+            .grade-table td {
+                white-space: nowrap;
+                padding: 1rem 0.75rem;
+            }
+            /* Adjust column widths for better fit */
+            .grade-table th:nth-child(1), /* Subject */
+            .grade-table td:nth-child(1) {
+                min-width: 200px;
+                max-width: 250px;
+            }
+            .grade-table th:nth-child(2), /* Teacher */
+            .grade-table td:nth-child(2) {
+                min-width: 120px;
+                max-width: 160px;
+            }
+            .grade-table th:nth-child(3), /* Prelim */
+            .grade-table td:nth-child(3),
+            .grade-table th:nth-child(4), /* Midterm */
+            .grade-table td:nth-child(4),
+            .grade-table th:nth-child(5), /* Finals */
+            .grade-table td:nth-child(5),
+            .grade-table th:nth-child(6), /* Grade */
+            .grade-table td:nth-child(6),
+            .grade-table th:nth-child(7), /* Equivalent */
+            .grade-table td:nth-child(7),
+            .grade-table th:nth-child(8), /* Remarks */
+            .grade-table td:nth-child(8) {
+                min-width: 80px;
+                max-width: 100px;
+            }
+        }
+        
+        /* Tablet: Slightly smaller font and padding */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .grade-table th, 
+            .grade-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+            .grade-table td:nth-child(1) {
+                min-width: 180px;
+            }
+        }
+        
+        /* Mobile: Stacked view for better readability */
+        @media (max-width: 767px) {
+            .grade-table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0;
+                width: 100%;
+            }
+            
+            /* Fixed first column (Subject) and last column (Remarks) */
+            .grade-table {
+                min-width: 600px;
+            }
+            
+            /* Make first column (Subject) more readable */
+            .grade-table td:nth-child(1) {
+                position: sticky;
+                left: 0;
+                background: white;
+                z-index: 10;
+                min-width: 150px;
+                max-width: 180px;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            }
+            
+            /* Make last column (Remarks) more readable */
+            .grade-table td:nth-child(8) {
+                position: sticky;
+                right: 0;
+                background: white;
+                z-index: 10;
+                min-width: 90px;
+                box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            }
+            
+            .grade-table th:nth-child(1) {
+                position: sticky;
+                left: 0;
+                background: linear-gradient(to right, #f9fafb, #f3f4f6);
+                z-index: 20;
+            }
+            
+            .grade-table th:nth-child(8) {
+                position: sticky;
+                right: 0;
+                background: linear-gradient(to right, #f9fafb, #f3f4f6);
+                z-index: 20;
+            }
+            
+            .grade-table th, 
+            .grade-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8125rem;
+            }
+            
+            /* Improve text readability on mobile */
+            .grade-table td:nth-child(1) .truncate-text {
+                max-width: 140px;
+                white-space: normal;
+                line-height: 1.3;
+            }
+            
+            /* Adjust remarks badge for mobile */
+            .grade-table td:nth-child(8) span {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+                white-space: nowrap;
+            }
+            
+            
+            
+        }
+        
+        /* Compact view for very small screens */
+        @media (max-width: 360px) {
+            .grade-table {
+                min-width: 550px;
+            }
+            .grade-table th, 
+            .grade-table td {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+            .grade-table td:nth-child(1) {
+                min-width: 130px;
+            }
+            .grade-table td:nth-child(1) .truncate-text {
+                max-width: 120px;
+            }
+        }
+        
+        /* Truncate text with ellipsis */
+        .truncate-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        
+        /* Tooltip for truncated content */
+        .has-tooltip {
+            position: relative;
+        }
+        .has-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            white-space: normal;
+            max-width: 300px;
+            word-wrap: break-word;
+            z-index: 100;
+            margin-bottom: 0.5rem;
+        }
+        .has-tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            margin-bottom: -0.25rem;
+        }
+        
+        /* Mobile touch tooltip */
+        @media (max-width: 767px) {
+            .has-tooltip-mobile:active::after {
+                content: attr(data-tooltip);
+                position: fixed;
+                bottom: auto;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                font-size: 0.875rem;
+                white-space: normal;
+                max-width: 90%;
+                word-wrap: break-word;
+                z-index: 9999;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen p-4 md:p-6">
@@ -150,7 +365,7 @@
                         Enter your last name and first name to find your student ID.
                     </p>
                     
-                    <form id="findStudentForm" class="space-y-4">
+                    <form id="findStudentForm" class="space-y-4" onsubmit="event.preventDefault(); searchStudentByName();">
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">
                                 <i class="fas fa-user mr-2 text-blue-600"></i>
@@ -161,7 +376,8 @@
                                    name="last_name"
                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                    placeholder="Enter your last name"
-                                   required>
+                                   required
+                                   onkeypress="handleEnterKey(event, 'firstName')">
                         </div>
                         
                         <div>
@@ -174,10 +390,12 @@
                                    name="first_name"
                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                    placeholder="Enter your first name"
-                                   required>
+                                   required
+                                   onkeypress="handleEnterKey(event, 'searchButton')">
                         </div>
                         
                         <button type="button" 
+                                id="searchButton"
                                 onclick="searchStudentByName()"
                                 class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
                             <i class="fas fa-search mr-2"></i>
@@ -269,28 +487,47 @@
                 
                 <!-- Check if grades exist -->
                 <?php if (isset($grades) && is_array($grades) && !empty($grades)): ?>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                    <div class="grade-table-container relative">
+                        <table class="grade-table min-w-full divide-y divide-gray-200">
                             <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                                 <tr>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Subject</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Teacher</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Prelim</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Midterm</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Finals</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider bg-blue-50">Grade</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Equivalent</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Remarks</th>
+                                    <th class="px-3 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Subject</th>
+                                    <th class="px-3 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Teacher</th>
+                                    <th class="px-3 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Prelim</th>
+                                    <th class="px-3 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Midterm</th>
+                                    <th class="px-3 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Finals</th>
+                                    <th class="px-3 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider bg-blue-50">Grade</th>
+                                    <th class="px-3 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Equivalent</th>
+                                    <th class="px-3 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Remarks</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <?php foreach ($grades as $grade): ?>
                                 <tr class="hover:bg-blue-50 transition-colors duration-200">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="font-bold text-gray-900"><?= htmlspecialchars($grade['subjectCode'] ?? '') ?></div>
-                                        <div class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($grade['subjectDesc'] ?? '') ?></div>
+                                    <td class="px-3 py-4">
+                                        <div class="font-bold text-gray-900 truncate-text has-tooltip has-tooltip-mobile" 
+                                             data-tooltip="<?= htmlspecialchars($grade['subjectCode'] ?? '') . ' - ' . htmlspecialchars($grade['subjectDesc'] ?? '') ?>">
+                                            <?= htmlspecialchars($grade['subjectCode'] ?? '') ?>
+                                        </div>
+                                        <div class="text-sm text-gray-500 mt-1 truncate-text has-tooltip has-tooltip-mobile" 
+                                             data-tooltip="<?= htmlspecialchars($grade['subjectDesc'] ?? '') ?>">
+                                            <?= htmlspecialchars($grade['subjectDesc'] ?? '') ?>
+                                        </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
+                                    <td class="px-3 py-4 text-gray-700 font-medium truncate-text has-tooltip has-tooltip-mobile"
+                                        data-tooltip="<?php
+                                            $teacher = '';
+                                            if (isset($grade['teacher_name']) && !empty($grade['teacher_name'])) {
+                                                $teacher = htmlspecialchars($grade['teacher_name']);
+                                            } elseif (isset($grade['Teacher']) && !empty($grade['Teacher'])) {
+                                                $teacher = 'Instructor ' . htmlspecialchars($grade['Teacher']);
+                                            } elseif (isset($grade['teacher_id']) && !empty($grade['teacher_id'])) {
+                                                $teacher = 'Prof. ' . htmlspecialchars($grade['teacher_id']);
+                                            } else {
+                                                $teacher = 'TBA';
+                                            }
+                                            echo $teacher;
+                                        ?>">
                                         <?php
                                         $teacher = '';
                                         if (isset($grade['teacher_name']) && !empty($grade['teacher_name'])) {
@@ -305,60 +542,69 @@
                                         echo $teacher;
                                         ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-lg font-medium <?= ($grade['Prelim'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
+                                    <td class="px-3 py-4 text-center text-lg font-medium <?= ($grade['Prelim'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
                                         <?= htmlspecialchars($grade['Prelim'] ?? '-') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-lg font-medium <?= ($grade['Midterm'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
+                                    <td class="px-3 py-4 text-center text-lg font-medium <?= ($grade['Midterm'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
                                         <?= htmlspecialchars($grade['Midterm'] ?? '-') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-lg font-medium <?= ($grade['Finals'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
+                                    <td class="px-3 py-4 text-center text-lg font-medium <?= ($grade['Finals'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
                                         <?= htmlspecialchars($grade['Finals'] ?? '-') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-2xl font-bold text-blue-700 bg-blue-50">
+                                    <td class="px-3 py-4 text-center text-xl font-bold text-blue-700 bg-blue-50">
                                         <?= htmlspecialchars($grade['Grade'] ?? '-') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-lg font-semibold text-gray-800">
+                                    <td class="px-3 py-4 text-center text-lg font-semibold text-gray-800">
                                         <?= htmlspecialchars($grade['Equivalent'] ?? '-') ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <td class="px-3 py-4 text-center">
                                         <?php
                                         $remarks = strtoupper(trim($grade['Remarks'] ?? ''));
                                         if ($remarks === 'PASSED') {
                                             $class = 'bg-green-100 text-green-800';
                                             $icon = 'fas fa-check-circle';
+                                            $shortRemarks = 'PASS';
                                         } elseif ($remarks === 'FAILED') {
                                             $class = 'bg-red-100 text-red-800';
                                             $icon = 'fas fa-times-circle';
+                                            $shortRemarks = 'FAIL';
                                         } elseif ($remarks === 'INC') {
                                             $class = 'bg-yellow-100 text-yellow-800';
                                             $icon = 'fas fa-exclamation-circle';
+                                            $shortRemarks = 'INC';
                                         } elseif ($remarks === 'DRP') {
                                             $class = 'bg-red-100 text-red-800';
                                             $icon = 'fas fa-ban';
+                                            $shortRemarks = 'DRP';
                                         } elseif ($remarks === 'TBT' || empty($remarks)) {
                                             $class = 'bg-gray-100 text-gray-800';
                                             $icon = 'fas fa-clock';
                                             $remarks = 'PENDING';
+                                            $shortRemarks = 'PEND';
                                         } else {
                                             $class = 'bg-blue-100 text-blue-800';
                                             $icon = 'fas fa-info-circle';
+                                            $shortRemarks = substr($remarks, 0, 4);
                                         }
                                         ?>
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold <?= $class ?>">
-                                            <i class="<?= $icon ?> mr-1"></i>
-                                            <?= htmlspecialchars($remarks) ?>
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold <?= $class ?> has-tooltip has-tooltip-mobile" data-tooltip="<?= htmlspecialchars($remarks) ?>">
+                                            <i class="<?= $icon ?> mr-1 text-xs"></i>
+                                            <span class="hidden md:inline"><?= htmlspecialchars($remarks) ?></span>
+                                            <span class="md:hidden"><?= htmlspecialchars($shortRemarks) ?></span>
                                         </span>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        
+                        
                     </div>
                     
                     <!-- Summary Footer -->
                     <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
-                        <div class="flex justify-between items-center">
-                            <div class="text-gray-700 font-medium">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                            <div class="text-gray-700 font-medium mb-2 md:mb-0">
                                 <i class="fas fa-list-check mr-2"></i>
                                 Total Subjects: <span class="font-bold text-blue-700"><?= count($grades) ?></span>
                             </div>
@@ -440,7 +686,24 @@
                     row.classList.remove('bg-blue-50');
                 });
             });
+            
+            // Focus on first input when modal opens
+            document.getElementById('findStudentModal').addEventListener('shown', function() {
+                document.getElementById('lastName').focus();
+            });
         });
+
+        // Handle Enter key press in form fields
+        function handleEnterKey(event, nextFieldId) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (nextFieldId === 'searchButton') {
+                    searchStudentByName();
+                } else {
+                    document.getElementById(nextFieldId).focus();
+                }
+            }
+        }
 
         // Show custom alert function
         function showAlert(message, type = 'warning') {
@@ -484,6 +747,10 @@
         function openFindStudentModal() {
             document.getElementById('findStudentModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            // Focus on first input
+            setTimeout(() => {
+                document.getElementById('lastName').focus();
+            }, 100);
         }
 
         function closeFindStudentModal() {
@@ -587,6 +854,8 @@
             });
             
             searchResults.classList.remove('hidden');
+            // Scroll to results
+            searchResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         function useStudentId(studentId) {
@@ -616,6 +885,26 @@
                 closeFindStudentModal();
             }
         });
+
+        // Mobile touch tooltip support
+        document.addEventListener('touchstart', function(e) {
+            // Remove any existing tooltips
+            const existingTooltips = document.querySelectorAll('.mobile-tooltip');
+            existingTooltips.forEach(tooltip => tooltip.remove());
+            
+            // Check if touch target has tooltip
+            const target = e.target.closest('.has-tooltip-mobile');
+            if (target && target.dataset.tooltip) {
+                // Create mobile tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'mobile-tooltip fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-90 text-white p-4 rounded-lg z-9999 max-w-xs';
+                tooltip.textContent = target.dataset.tooltip;
+                document.body.appendChild(tooltip);
+                
+                // Remove tooltip after 2 seconds or on next touch
+                setTimeout(() => tooltip.remove(), 2000);
+            }
+        }, { passive: true });
     </script>
 </body>
 </html>
