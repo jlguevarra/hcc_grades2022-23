@@ -184,8 +184,11 @@
                 white-space: nowrap;
             }
             
-            
-            
+            /* Disable tooltips on mobile */
+            .has-tooltip:hover::after,
+            .has-tooltip:hover::before {
+                display: none !important;
+            }
         }
         
         /* Compact view for very small screens */
@@ -214,58 +217,38 @@
             max-width: 200px;
         }
         
-        /* Tooltip for truncated content */
-        .has-tooltip {
-            position: relative;
-        }
-        .has-tooltip:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.75rem;
-            white-space: normal;
-            max-width: 300px;
-            word-wrap: break-word;
-            z-index: 100;
-            margin-bottom: 0.5rem;
-        }
-        .has-tooltip:hover::before {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-top-color: rgba(0, 0, 0, 0.9);
-            z-index: 100;
-            margin-bottom: -0.25rem;
-        }
-        
-        /* Mobile touch tooltip */
-        @media (max-width: 767px) {
-            .has-tooltip-mobile:active::after {
+        /* Tooltip for truncated content - DESKTOP ONLY */
+        @media (min-width: 768px) {
+            .has-tooltip {
+                position: relative;
+            }
+            .has-tooltip:hover::after {
                 content: attr(data-tooltip);
-                position: fixed;
-                bottom: auto;
-                top: 50%;
+                position: absolute;
+                bottom: 100%;
                 left: 50%;
-                transform: translate(-50%, -50%);
+                transform: translateX(-50%);
                 background-color: rgba(0, 0, 0, 0.9);
                 color: white;
-                padding: 1rem;
-                border-radius: 0.5rem;
-                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.375rem;
+                font-size: 0.75rem;
                 white-space: normal;
-                max-width: 90%;
+                max-width: 300px;
                 word-wrap: break-word;
-                z-index: 9999;
-                text-align: center;
+                z-index: 100;
+                margin-bottom: 0.5rem;
+            }
+            .has-tooltip:hover::before {
+                content: '';
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 5px solid transparent;
+                border-top-color: rgba(0, 0, 0, 0.9);
+                z-index: 100;
+                margin-bottom: -0.25rem;
             }
         }
     </style>
@@ -505,30 +488,16 @@
                                 <?php foreach ($grades as $grade): ?>
                                 <tr class="hover:bg-blue-50 transition-colors duration-200">
                                     <td class="px-3 py-4">
-                                        <div class="font-bold text-gray-900 truncate-text has-tooltip has-tooltip-mobile" 
+                                        <div class="font-bold text-gray-900 truncate-text <?php echo (strlen($grade['subjectCode'] ?? '') > 20) ? 'has-tooltip' : '' ?>" 
                                              data-tooltip="<?= htmlspecialchars($grade['subjectCode'] ?? '') . ' - ' . htmlspecialchars($grade['subjectDesc'] ?? '') ?>">
                                             <?= htmlspecialchars($grade['subjectCode'] ?? '') ?>
                                         </div>
-                                        <div class="text-sm text-gray-500 mt-1 truncate-text has-tooltip has-tooltip-mobile" 
+                                        <div class="text-sm text-gray-500 mt-1 truncate-text <?php echo (strlen($grade['subjectDesc'] ?? '') > 30) ? 'has-tooltip' : '' ?>" 
                                              data-tooltip="<?= htmlspecialchars($grade['subjectDesc'] ?? '') ?>">
                                             <?= htmlspecialchars($grade['subjectDesc'] ?? '') ?>
                                         </div>
                                     </td>
-                                    <td class="px-3 py-4 text-gray-700 font-medium truncate-text has-tooltip has-tooltip-mobile"
-                                        data-tooltip="<?php
-                                            $teacher = '';
-                                            if (isset($grade['teacher_name']) && !empty($grade['teacher_name'])) {
-                                                $teacher = htmlspecialchars($grade['teacher_name']);
-                                            } elseif (isset($grade['Teacher']) && !empty($grade['Teacher'])) {
-                                                $teacher = 'Instructor ' . htmlspecialchars($grade['Teacher']);
-                                            } elseif (isset($grade['teacher_id']) && !empty($grade['teacher_id'])) {
-                                                $teacher = 'Prof. ' . htmlspecialchars($grade['teacher_id']);
-                                            } else {
-                                                $teacher = 'TBA';
-                                            }
-                                            echo $teacher;
-                                        ?>">
-                                        <?php
+                                    <td class="px-3 py-4 text-gray-700 font-medium truncate-text <?php 
                                         $teacher = '';
                                         if (isset($grade['teacher_name']) && !empty($grade['teacher_name'])) {
                                             $teacher = htmlspecialchars($grade['teacher_name']);
@@ -539,8 +508,10 @@
                                         } else {
                                             $teacher = 'TBA';
                                         }
-                                        echo $teacher;
-                                        ?>
+                                        echo (strlen($teacher) > 15) ? 'has-tooltip' : '';
+                                    ?>"
+                                        data-tooltip="<?= $teacher ?>">
+                                        <?= $teacher ?>
                                     </td>
                                     <td class="px-3 py-4 text-center text-lg font-medium <?= ($grade['Prelim'] ?? '') === 'TBT' ? 'text-gray-400 italic' : 'text-gray-900' ?>">
                                         <?= htmlspecialchars($grade['Prelim'] ?? '-') ?>
@@ -587,7 +558,8 @@
                                             $shortRemarks = substr($remarks, 0, 4);
                                         }
                                         ?>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold <?= $class ?> has-tooltip has-tooltip-mobile" data-tooltip="<?= htmlspecialchars($remarks) ?>">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold <?= $class ?>" 
+                                              title="<?= htmlspecialchars($remarks) ?>">
                                             <i class="<?= $icon ?> mr-1 text-xs"></i>
                                             <span class="hidden md:inline"><?= htmlspecialchars($remarks) ?></span>
                                             <span class="md:hidden"><?= htmlspecialchars($shortRemarks) ?></span>
@@ -885,26 +857,6 @@
                 closeFindStudentModal();
             }
         });
-
-        // Mobile touch tooltip support
-        document.addEventListener('touchstart', function(e) {
-            // Remove any existing tooltips
-            const existingTooltips = document.querySelectorAll('.mobile-tooltip');
-            existingTooltips.forEach(tooltip => tooltip.remove());
-            
-            // Check if touch target has tooltip
-            const target = e.target.closest('.has-tooltip-mobile');
-            if (target && target.dataset.tooltip) {
-                // Create mobile tooltip
-                const tooltip = document.createElement('div');
-                tooltip.className = 'mobile-tooltip fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-90 text-white p-4 rounded-lg z-9999 max-w-xs';
-                tooltip.textContent = target.dataset.tooltip;
-                document.body.appendChild(tooltip);
-                
-                // Remove tooltip after 2 seconds or on next touch
-                setTimeout(() => tooltip.remove(), 2000);
-            }
-        }, { passive: true });
     </script>
 </body>
 </html>
